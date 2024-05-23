@@ -1,14 +1,9 @@
 package com.tataconsultancy.cuentamovimientos.service;
 
 import com.tataconsultancy.cuentamovimientos.dto.MovimientoDTO;
-import com.tataconsultancy.cuentamovimientos.entity.Cuenta;
 import com.tataconsultancy.cuentamovimientos.entity.MensajeError;
 import com.tataconsultancy.cuentamovimientos.entity.Movimiento;
-import com.tataconsultancy.cuentamovimientos.entity.TipoMovimiento;
-import com.tataconsultancy.cuentamovimientos.exception.CuentaNoEncontradaException;
 import com.tataconsultancy.cuentamovimientos.exception.RecursoNoEncontradoException;
-import com.tataconsultancy.cuentamovimientos.exception.SaldoInsuficienteException;
-import com.tataconsultancy.cuentamovimientos.repository.CuentaRepository;
 import com.tataconsultancy.cuentamovimientos.repository.MovimientoRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +11,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,60 +18,15 @@ import java.util.stream.Collectors;
 @Slf4j
 public class MovimientoServiceImpl implements MovimientoService {
 
+
     private MovimientoRepository movimientoRepository;
-    private CuentaRepository cuentaRepository;
     private ModelMapper modelMapper;
+    private ValidaRegistroMovimiento actualizaMovimiento;
 
     @Override
     public MovimientoDTO crear(MovimientoDTO movimientoDTO) {
         Movimiento movimiento = modelMapper.map(movimientoDTO, Movimiento.class);
-
-        Cuenta cuenta = cuentaRepository.findByNumeroCuenta(movimiento.getNumeroCuenta()).orElseThrow(
-                () -> new CuentaNoEncontradaException(MensajeError.CUENTA_NO_ENCONTRADA.toString()));
-        Optional<Movimiento> optionalMovimiento = movimientoRepository.obtenerUltimoMovimientoPorNumeroCuenta(cuenta.getNumeroCuenta());
-
-        log.info("Cuenta: {}", cuenta);
-
-        //hay movimientos
-        if (optionalMovimiento.isPresent()) {
-            log.info("Tipo Movimiento: {}", TipoMovimiento.DEPOSITO);
-            if (movimiento.getTipoMovimiento().toUpperCase().equals(TipoMovimiento.DEPOSITO.toString())) {
-                movimiento.setSaldo(optionalMovimiento.get().getSaldo() + movimiento.getValor());
-            }
-            if (movimiento.getTipoMovimiento().toUpperCase().equals(TipoMovimiento.RETIRO.toString())) {
-                if (optionalMovimiento.get().getSaldo() < movimiento.getValor()) {
-                    throw new SaldoInsuficienteException(MensajeError.SALDO_NO_DISPONIBLE.toString());
-                } else {
-                    if (movimiento.getValor() < 0) {
-                        movimiento.setSaldo(optionalMovimiento.get().getSaldo() - (movimiento.getValor() * -1));
-                    } else {
-                        movimiento.setSaldo(optionalMovimiento.get().getSaldo() - movimiento.getValor());
-                    }
-                }
-            }
-
-        } else {// no hay movimientos
-            if (movimiento.getTipoMovimiento().toUpperCase().equals(TipoMovimiento.DEPOSITO.toString())) {
-                movimiento.setSaldo(cuenta.getSaldoInicial() + movimiento.getValor());
-            } else {
-                if (movimiento.getTipoMovimiento().toUpperCase().equals(TipoMovimiento.RETIRO.toString())) {
-                    if (cuenta.getSaldoInicial() < movimiento.getValor()) {
-                        throw new SaldoInsuficienteException(MensajeError.SALDO_NO_DISPONIBLE.toString());
-                    } else {
-                        if (movimiento.getValor() < 0) {
-                            movimiento.setSaldo(cuenta.getSaldoInicial() - (movimiento.getValor() * -1));
-                        } else {
-                            movimiento.setSaldo(cuenta.getSaldoInicial() - movimiento.getValor());
-                        }
-                    }
-
-                }
-            }
-
-        }
-
-
-        return modelMapper.map(movimientoRepository.save(movimiento), MovimientoDTO.class);
+        return modelMapper.map(movimientoRepository.save(actualizaMovimiento.actualizarSaldoMovimiento(movimiento)), MovimientoDTO.class);
     }
 
     @Override

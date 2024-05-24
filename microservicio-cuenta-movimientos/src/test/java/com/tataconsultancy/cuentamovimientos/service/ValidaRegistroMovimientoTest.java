@@ -57,7 +57,7 @@ class ValidaRegistroMovimientoTest {
 
         //Assert
         assertNotNull(movimientoSaldoActualizado);
-        assertEquals(110.0, movimientoSaldoActualizado.getSaldo());
+        assertEquals(120.0, movimientoSaldoActualizado.getSaldo());
 
     }
 

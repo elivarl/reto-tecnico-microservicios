@@ -1,6 +1,7 @@
 package com.tataconsultancy.cuentamovimientos.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,6 @@ public class Cuenta {
 
     @Column(unique = true)
     private String numeroCuenta;
-
     private String tipoCuenta;
     private double saldoInicial;
     private boolean estado;

@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 public class RespuestaError {
-    private LocalDateTime timestamp;
-    private String mensaje;
+    private LocalDateTime fechaError;
+    private String mensajeTecnico;
     private String path;
-    private String codigo;
+    private String mensajeUsuario;
 }

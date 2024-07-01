@@ -13,7 +13,7 @@ public class ClienteDTO{
     @NotBlank(message = "El campo nombre no debe estar en blanco")
     private String nombre;
     @NotBlank(message = "El campo genero no debe estar en blanco")
-    @Size (min = 1,max = 1, message = "El campo genero debe tener valores M=masculino, F=femenino")
+    //@Size (min = 1,max = 1, message = "El campo genero debe tener valores M=masculino, F=femenino")
     @Pattern(regexp="[M,F]", message="El campo genero debe tener valores M=masculino, F=femenino")
     private String genero;
     @Positive(message="El campo edad debe ser un valor positivo")

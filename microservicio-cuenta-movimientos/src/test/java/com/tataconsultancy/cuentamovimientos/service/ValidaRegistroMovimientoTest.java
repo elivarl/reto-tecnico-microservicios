@@ -69,7 +69,7 @@ class ValidaRegistroMovimientoTest {
         Movimiento movimiento = new Movimiento();
         movimiento.setFecha(LocalDate.now());
         movimiento.setTipoMovimiento(TipoMovimiento.RETIRO.toString());
-        movimiento.setValor(20);
+        movimiento.setValor(-20);
         movimiento.setNumeroCuenta(numeroCuenta);
 
         Movimiento ultimoMovimiento = new Movimiento();

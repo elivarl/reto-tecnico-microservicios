@@ -6,6 +6,7 @@ import com.tataconsultancy.cuentamovimientos.entity.MensajeError;
 import com.tataconsultancy.cuentamovimientos.exception.RecursoNoEncontradoException;
 import com.tataconsultancy.cuentamovimientos.repository.CuentaRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class CuentaServiceImpl implements CuentaService{
     private CuentaRepository cuentaRepository;
     private ModelMapper modelMapper;
@@ -32,7 +34,7 @@ public class CuentaServiceImpl implements CuentaService{
 
     @Override
     public CuentaDTO obtenerPorId(Long id) {
-        Cuenta cuenta = cuentaRepository.findById(id).orElseThrow(()-> new RecursoNoEncontradoException(MensajeError.RECURSO_NO_ENCONTRADO.toString()));
+        Cuenta cuenta = cuentaRepository.findById(id).orElseThrow(()-> new RecursoNoEncontradoException(MensajeError.RECURSO_NO_ENCONTRADO));
         return modelMapper.map(cuenta,CuentaDTO.class);
     }
 
@@ -52,7 +54,7 @@ public class CuentaServiceImpl implements CuentaService{
 
     @Override
     public void eliminarPorId(Long id) {
-        cuentaRepository.findById(id).orElseThrow(()-> new RecursoNoEncontradoException(MensajeError.RECURSO_NO_ENCONTRADO.toString()));
+        cuentaRepository.findById(id).orElseThrow(()-> new RecursoNoEncontradoException(MensajeError.RECURSO_NO_ENCONTRADO));
         cuentaRepository.deleteById(id);
     }
 

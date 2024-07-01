@@ -2,6 +2,7 @@ package com.tataconsultancy.cuentamovimientos.controller;
 
 import com.tataconsultancy.cuentamovimientos.dto.CuentaDTO;
 import com.tataconsultancy.cuentamovimientos.service.CuentaService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class CuentaController {
     private CuentaService cuentaService;
 
     @PostMapping
-    public ResponseEntity<CuentaDTO> crear(@RequestBody CuentaDTO cuentaDTO){
+    public ResponseEntity<CuentaDTO> crear(@RequestBody @Valid CuentaDTO cuentaDTO){
         return new ResponseEntity<>(cuentaService.crear(cuentaDTO), HttpStatus.CREATED);
     }
 

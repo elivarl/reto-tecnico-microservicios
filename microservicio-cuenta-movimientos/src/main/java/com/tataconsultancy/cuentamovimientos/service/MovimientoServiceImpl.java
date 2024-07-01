@@ -7,6 +7,7 @@ import com.tataconsultancy.cuentamovimientos.exception.RecursoNoEncontradoExcept
 import com.tataconsultancy.cuentamovimientos.repository.MovimientoRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Slf4j
 public class MovimientoServiceImpl implements MovimientoService {
-
 
     private MovimientoRepository movimientoRepository;
     private ModelMapper modelMapper;
@@ -38,7 +38,7 @@ public class MovimientoServiceImpl implements MovimientoService {
     @Override
     public MovimientoDTO obtenerPorId(Long id) {
         Movimiento movimiento= movimientoRepository.findById(id).orElseThrow(
-                ()-> new RecursoNoEncontradoException(MensajeError.RECURSO_NO_ENCONTRADO.toString())
+                ()-> new RecursoNoEncontradoException(MensajeError.RECURSO_NO_ENCONTRADO)
         );
         return modelMapper.map(movimiento,MovimientoDTO.class);
     }
@@ -58,7 +58,7 @@ public class MovimientoServiceImpl implements MovimientoService {
     @Override
     public void eliminarPorId(Long id) {
         movimientoRepository.findById(id).orElseThrow(
-                ()-> new RecursoNoEncontradoException(MensajeError.RECURSO_NO_ENCONTRADO.toString())
+                ()-> new RecursoNoEncontradoException(MensajeError.RECURSO_NO_ENCONTRADO)
         );
         movimientoRepository.deleteById(id);
     }

@@ -3,26 +3,38 @@ package com.tataconsultancy.clientepersona.service;
 import com.tataconsultancy.clientepersona.dto.ClienteDTO;
 import com.tataconsultancy.clientepersona.entity.Cliente;
 import com.tataconsultancy.clientepersona.entity.MensajeError;
+import com.tataconsultancy.clientepersona.exception.CedulaInvalidaException;
 import com.tataconsultancy.clientepersona.exception.RecursoNoEncontradoException;
 import com.tataconsultancy.clientepersona.repository.ClienteRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class ClienteServiceImpl implements ClienteService{
 
     private ClienteRepository clienteRepository;
     private ModelMapper modelMapper;
+    private ValidarIdentificacionCedula validarIdentificacionCedula;
 
     @Override
     public ClienteDTO crear(ClienteDTO clienteDTO) {
+
+        if(!validarIdentificacionCedula.validarCedula(clienteDTO.getIdentificacion())){
+            throw new CedulaInvalidaException(MensajeError.IDENTIFICACION_NO_VALIDO);
+        }
+
         Cliente cliente = modelMapper.map(clienteDTO,Cliente.class);
+        Cliente clienteDB;
+
+        clienteDB = clienteRepository.save(cliente);
+
         return modelMapper.map(clienteRepository.save(cliente),ClienteDTO.class);
     }
 
@@ -36,7 +48,7 @@ public class ClienteServiceImpl implements ClienteService{
     @Override
     public ClienteDTO obtenerPorId(Long id) {
         Cliente cliente=clienteRepository.findById(id).orElseThrow(
-                ()-> new RecursoNoEncontradoException(MensajeError.RECURSO_NO_ENCONTRADO.toString())
+                ()-> new RecursoNoEncontradoException(MensajeError.RECURSO_NO_ENCONTRADO)
         );
         return modelMapper.map(cliente,ClienteDTO.class);
     }
@@ -58,7 +70,7 @@ public class ClienteServiceImpl implements ClienteService{
     @Override
     public void eliminarPorId(Long id) {
         clienteRepository.findById(id).orElseThrow(
-                ()-> new RecursoNoEncontradoException(MensajeError.RECURSO_NO_ENCONTRADO.toString())
+                ()-> new RecursoNoEncontradoException(MensajeError.RECURSO_NO_ENCONTRADO)
         );
         clienteRepository.deleteById(id);
     }

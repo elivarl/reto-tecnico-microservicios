@@ -2,6 +2,7 @@ package com.tataconsultancy.clientepersona.service;
 
 import com.tataconsultancy.clientepersona.dto.ClienteDTO;
 import com.tataconsultancy.clientepersona.entity.Cliente;
+import com.tataconsultancy.clientepersona.entity.Persona;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;

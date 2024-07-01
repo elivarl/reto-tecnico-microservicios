@@ -4,6 +4,7 @@ import com.tataconsultancy.clientepersona.dto.ClienteDTO;
 import com.tataconsultancy.clientepersona.entity.Cliente;
 import com.tataconsultancy.clientepersona.entity.Persona;
 import com.tataconsultancy.clientepersona.service.ClienteService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class ClienteController {
     private ClienteService clienteService;
 
     @PostMapping
-    public ResponseEntity <ClienteDTO> crear(@RequestBody ClienteDTO clienteDTO){
+    public ResponseEntity <ClienteDTO> crear(@RequestBody @Valid ClienteDTO clienteDTO){
         return  new ResponseEntity<>(clienteService.crear(clienteDTO), HttpStatus.CREATED) ;
     }
 
@@ -39,10 +40,8 @@ public class ClienteController {
     }
 
     @PutMapping
-    public ResponseEntity <ClienteDTO> actualizar(@RequestBody ClienteDTO clienteDTO){
-
-
-        return  new ResponseEntity<>(clienteService.crear(clienteDTO), HttpStatus.OK);
+    public ResponseEntity <ClienteDTO> actualizar(@RequestBody @Valid ClienteDTO clienteDTO){
+        return  new ResponseEntity<>(clienteService.actualizar(clienteDTO), HttpStatus.OK);
     }
 
 }
